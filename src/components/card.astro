@@ -1,0 +1,44 @@
+---
+// src/components/Card.astro
+const { title, icon: Icon } = Astro.props;
+---
+
+<section>
+    <h3>
+        <span>{Icon && <Icon />}</span>
+        {title}
+    </h3>
+    <hr />
+    <div>
+        <slot />
+    </div>
+</section>
+
+<style is:global>
+    section {
+        border: 1px;
+        border-style: solid;
+        border-color: var(--border);
+        border-radius: var(--radius);
+        padding: 0.75rem 1.25rem;
+    }
+
+    h3 {
+        line-height: 1.25rem;
+        align-items: center;
+        justify-content: center;
+        display: flex;
+        gap: 1rem;
+    }
+
+    h3 span {
+        line-height: 1rem;
+    }
+
+    hr {
+        border: none;
+        height: 1px;
+        background-color: var(--border);
+        margin: 0.5rem;
+    }
+</style>

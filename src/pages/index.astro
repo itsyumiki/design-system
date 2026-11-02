@@ -1,0 +1,50 @@
+---
+import BaseLayout from "@/layouts/base.astro";
+import Button from "@/components/button.astro";
+import SillyButton from "@/components/sillybutton.astro";
+
+import Hero from "@/components/hero.astro";
+import heroImg from "../../public/nachoneko.png";
+
+import { Cat } from "@lucide/astro";
+---
+
+<BaseLayout title={"Home"}>
+    <Hero img={heroImg} />
+
+    <div>
+        <a href="/htmltest">
+            <Button variant="primary">touch me to test html</Button>
+        </a>
+
+        <a href="/buttonstest">
+            <Button variant="secondary">touch me to test buttons</Button>
+        </a>
+    </div>
+    <div>
+        <a href="/scrolltest">
+            <Button variant="outline">touch me to test scrolling</Button>
+        </a>
+        <a href="/toasttest">
+            <Button variant="ghost">touch me test toasts</Button>
+        </a>
+        <a href="/meow">
+            <Button variant="destructive">touch me to meow</Button>
+        </a>
+    </div>
+    <a href="/silly" style="width: 100%;">
+        <SillyButton class="btn-silly" style="width: 100%;">
+            <Cat size="1rem" class="spin btn-silly" /> touch me to silly
+            <Cat size="1rem" class="spin btn-silly" />
+        </SillyButton>
+    </a>
+</BaseLayout>
+
+<style is:global>
+    div {
+        display: flex;
+        width: 100%;
+        justify-content: center;
+        gap: 1rem;
+    }
+</style>

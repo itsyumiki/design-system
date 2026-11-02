@@ -1,0 +1,165 @@
+---
+import type { HTMLAttributes } from "astro/types";
+
+interface Props extends HTMLAttributes<"button"> {
+    variant?:
+        "primary" | "secondary" | "outline" | "ghost" | "destructive" | "link";
+    size?: "small" | "medium" | "large";
+    disabled?: boolean;
+    icon?: boolean;
+    class?: string;
+}
+
+const {
+    variant = "primary",
+    size = "medium",
+    disabled,
+    icon,
+    class: className,
+    ...rest
+} = Astro.props;
+---
+
+<button
+    class:list={["btn", variant, size, { icon }, className]}
+    {disabled}
+    {...rest}
+>
+    <slot />
+</button>
+<style is:global>
+    button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
+        gap: 0.5rem;
+        height: 2.25rem;
+        padding: 0 1rem;
+
+        font-size: 0.875rem;
+        font-weight: 300;
+        cursor: pointer;
+
+        border: none;
+        border-radius: var(--radius-medium);
+
+        transition:
+            background 0.15s,
+            border-color 0.15s,
+            transform 0.06s;
+    }
+
+    button:active {
+        transform: translateY(1px);
+    }
+
+    .btn {
+        background: var(--primary);
+        color: var(--primary-foreground);
+    }
+
+    .btn:hover {
+        background: color-mix(in oklab, var(--primary) 85%, transparent);
+    }
+
+    .btn:active {
+        background: color-mix(in oklab, var(--primary) 60%, transparent);
+    }
+
+    .btn:disabled {
+        opacity: 0.5;
+        pointer-events: none;
+    }
+
+    .btn.secondary {
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+    }
+
+    .btn.secondary:hover {
+        background: color-mix(in oklab, var(--secondary), var(--foreground) 8%);
+    }
+
+    .btn.secondary:active {
+        background: color-mix(in oklab, var(--secondary) 80%, transparent);
+    }
+
+    .btn.outline {
+        border: 1px solid transparent;
+        border-radius: var(--radius-medium);
+        border-color: var(--input);
+
+        background: transparent;
+        color: var(--foreground);
+    }
+
+    .btn.outline:hover {
+        background: color-mix(in oklab, var(--accent) 60%, transparent);
+    }
+
+    .btn.outline:active {
+        background: color-mix(in oklab, var(--accent) 30%, transparent);
+    }
+
+    .btn.ghost {
+        background: transparent;
+        color: var(--foreground);
+        border: none;
+    }
+
+    .btn.ghost:hover {
+        background: color-mix(in oklab, var(--accent) 60%, transparent);
+    }
+
+    .btn.destructive {
+        color: white;
+        background-color: var(--destructive);
+    }
+
+    .btn.destructive:hover {
+        background: color-mix(in oklab, var(--destructive) 85%, black);
+    }
+
+    .btn.link {
+        background: none;
+        color: var(--foreground);
+        padding: 0;
+        height: auto;
+    }
+
+    .btn.link:hover {
+        text-decoration: underline;
+        text-underline-offset: 4px;
+    }
+
+    .btn.small {
+        height: 1.9rem;
+        padding: 0 0.7rem;
+        font-size: 0.8rem;
+    }
+
+    .btn.large {
+        height: 2.6rem;
+        padding: 0 1.4rem;
+    }
+
+    .btn.icon {
+        width: 2.25rem;
+        padding: 0;
+    }
+
+    .btn svg {
+        flex-shrink: 0;
+    }
+
+    .spin {
+        animation: sp 0.7s linear infinite;
+    }
+
+    @keyframes sp {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+</style>

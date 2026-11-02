@@ -1,0 +1,123 @@
+---
+import BaseLayout from "@/layouts/base.astro";
+
+const titleLevels = [1, 2, 3, 4, 5, 6];
+---
+
+<BaseLayout title={"Html tests"}>
+    {titleLevels.map((n) => {
+        const Tag = `h${n}` as keyof HTMLElementTagNameMap;
+        return (
+            <>
+                <Tag>Title test h{n}</Tag>
+                <hr />
+            </>
+        );
+    })}
+    <p>normal Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</p>
+    <p>
+        <b>bold Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</b>
+    </p>
+    <p>
+        <i>italic Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</i>
+    </p>
+
+    <hr />
+    <h1>Meow</h1>
+    <h2>Meow</h2>
+    <h3>Meow</h3>
+    <h4>Meow</h4>
+    <h5>Meow</h5>
+    <h6>Meow</h6>
+    <p>a very normal text</p>
+
+    <p>
+        <b> a very bold text</b>
+    </p>
+    <p>
+        <i>a very professional text (its italian)</i>
+    </p>
+
+    <p>
+        a very <strong>stronk</strong> text
+    </p>
+    <p>
+        a very <em>emphasized</em> text
+    </p>
+    <p>
+        a <mark>zuckerberg</mark> text
+    </p>
+    <p>
+        a <small>kitten</small> text
+    </p>
+    <p>
+        a <strike>dead</strike> text
+    </p>
+    <p>
+        an <u>underlined</u> text
+    </p>
+    <p>
+        an <ins>inserted</ins> text
+    </p>
+    <p>
+        a <sub>sub</sub> text
+    </p>
+    <p>
+        a <sup>sup</sup> text
+    </p>
+    <p>
+        a very <a href="https://staging.yumiki.me">linky</a> text
+    </p>
+    <p>
+        <a href="/meow">click here to meow</a>
+    </p>
+    <p>
+        <img src="pfp.jpeg" alt="my pfp" height="128" width="128" />
+    </p>
+    <strong>cars:</strong>
+    <ol>
+        <li>yellow meow</li>
+        <li>kitten meow</li>
+        <li>white meow</li>
+        <li>black meow</li>
+    </ol>
+
+    <strong>unordered cars:</strong>
+    <ul>
+        <li>yellow meow</li>
+        <li>kitten meow</li>
+        <li>white meow</li>
+        <li>black meow</li>
+    </ul>
+
+    <dl>
+        <dt>
+            <strong>
+                <em>Cat:</em>
+            </strong>
+        </dt>
+        <dd>
+            a <strong>fur </strong>
+            <a href="https://en.wikipedia.org/wiki/Ball">ball</a>
+            <span> that</span> <mark>meows</mark> per <em>sometimes</em>
+        </dd>
+    </dl>
+    <h3>click below to see my pfp big</h3>
+    <p>
+        <a href="./pfp.jpeg">
+            <img src="./pfp.jpeg" alt="pfp page" height="150" width="600" />
+        </a>
+    </p>
+    <p>
+        <em>wide ass pfp go brr</em>
+    </p>
+</BaseLayout>
+
+<style is:global>
+    hr {
+        width: 100%;
+        border: none;
+        background-color: var(--ring);
+        height: 1px;
+    }
+</style>

@@ -1,0 +1,90 @@
+---
+const { domain } = Astro.props;
+import { Moon, Sun } from "@lucide/astro";
+import Button from "@/components/button.astro";
+---
+
+<header>
+    <a href="/">
+        <Button variant="link" id="header-domain">
+            {domain}
+        </Button>
+    </a>
+    <Button variant="ghost" icon id="theme-btn">
+        <Moon class="theme-icon-dark" size="1.2rem" />
+        <Sun class="theme-icon-light" size="1.2rem" />
+    </Button>
+    <script>
+        console.log("theme button thingy loaded");
+        const btn = document.getElementById("theme-btn");
+
+        btn?.addEventListener("click", () => {
+            const root = document.documentElement;
+            const isLight = root.classList.contains("theme-light");
+            const next = isLight ? "dark" : "light";
+
+            root.classList.remove("theme-light", "theme-dark");
+            root.classList.add(`theme-${next}`);
+
+            try {
+                localStorage.setItem("theme", next);
+            } catch {}
+        });
+    </script>
+</header>
+
+<style is:global>
+    /* Page header */
+
+    header {
+        z-index: 100;
+        display: flex;
+
+        top: 0.75rem;
+        width: calc(100% - 2rem);
+        height: 3rem;
+        position: sticky;
+
+        padding: 0.75rem 1rem;
+        padding-right: 0.5rem;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+
+        background-color: color-mix(
+            in oklab,
+            var(--background) 75%,
+            transparent
+        );
+        border: 1px solid var(--border);
+        backdrop-filter: blur(10px);
+
+        border-radius: var(--radius);
+    }
+
+    #header-domain {
+        font-family: var(--font-content);
+        font-weight: 300;
+        font-size: 1.25rem;
+        line-height: 1.5;
+    }
+
+    #theme-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        padding: 0.5rem;
+        border-radius: 0.5rem;
+        border: 0 solid var(--border);
+
+        background-color: var(--background);
+        color: var(--foreground);
+        cursor: pointer;
+    }
+
+    #theme-btn:hover {
+        background: color-mix(in oklab, var(--accent) 50%, transparent);
+        color: var(--secondary-foreground);
+    }
+</style>

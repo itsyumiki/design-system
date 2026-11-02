@@ -1,0 +1,72 @@
+---
+import type { HTMLAttributes } from "astro/types";
+
+interface Props extends HTMLAttributes<"button"> {}
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<button class:list={["btn", "btn-silly", className]} {...rest}>
+    <slot />
+</button>
+<style is:global>
+    .btn-silly {
+        background-color: hotpink;
+        color: white;
+    }
+    .btn-silly:hover {
+        background-color: pink;
+    }
+
+    .btn-silly:hover,
+    main:has(.btn-silly:hover) * {
+        animation: mrow var(--dur, 0.1s) linear var(--delay, 0s) infinite
+            var(--dir, normal);
+    }
+
+    @keyframes mrow {
+        0% {
+            transform: translate(var(--amp, 5px), 0);
+        }
+        25% {
+            transform: translate(0, var(--amp, 5px));
+        }
+        50% {
+            transform: translate(calc(var(--amp, 5px) * -1), 0);
+        }
+        75% {
+            transform: translate(0, calc(var(--amp, 5px) * -1));
+        }
+        100% {
+            transform: translate(var(--amp, 5px), 0);
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .btn-silly:hover,
+        main:has(.btn-silly:hover) * {
+            animation: none;
+        }
+    }
+</style>
+
+<script>
+    const rand = (min: number, max: number) =>
+        min + Math.random() * (max - min);
+
+    function reroll() {
+        document.querySelectorAll<HTMLElement>("main *").forEach((el) => {
+            el.style.setProperty("--dur", rand(0.06, 0.18).toFixed(3) + "s");
+            el.style.setProperty("--delay", (-rand(0, 0.2)).toFixed(3) + "s");
+            el.style.setProperty("--amp", rand(2, 9).toFixed(1) + "px");
+            el.style.setProperty(
+                "--dir",
+                Math.random() < 0.5 ? "normal" : "reverse",
+            );
+        });
+    }
+
+    document.querySelectorAll(".btn-silly").forEach((el) => {
+        el.addEventListener("mouseenter", reroll);
+    });
+</script>

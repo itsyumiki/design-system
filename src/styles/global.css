@@ -1,0 +1,10 @@
+@import "normalize.css";
+
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/geist-mono";
+@import "@fontsource-variable/doto";
+
+@import "@/styles/typography.css";
+
+@import "@/styles/themes/dark.css";
+@import "@/styles/themes/light.css";

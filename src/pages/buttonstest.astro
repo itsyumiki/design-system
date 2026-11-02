@@ -1,0 +1,162 @@
+---
+import BaseLayout from "@/layouts/base.astro";
+import Button from "@/components/button.astro";
+
+import { Moon, Plus, LoaderCircle } from "@lucide/astro";
+---
+
+<BaseLayout title={"Buttons test"}>
+    <div style="display: flex;gap: 10px">
+        <Button variant="primary">Primary</Button>
+        <Button variant="secondary">Secondary</Button>
+        <Button variant="outline">Outline</Button>
+        <Button variant="ghost">Ghost</Button>
+        <Button variant="destructive">Destructive</Button>
+        <Button variant="link">Link</Button>
+        <button>Dumbutton</button>
+    </div>
+
+    <div style="display: flex;gap: 10px;align-items: center">
+        <Button size="small">Small</Button>
+        <Button size="medium">Medium</Button>
+        <Button size="large">Large</Button>
+        <Button variant="outline">
+            <Plus size="1rem" /> New project
+        </Button>
+        <Button variant="secondary" icon>
+            <Plus size="1rem" />
+        </Button>
+        <Button variant="secondary">
+            <LoaderCircle size="1rem" class="spin" />
+            Saving
+        </Button>
+        <Button disabled>Disabled</Button>
+    </div>
+
+    <hr />
+    <Button variant="ghost">
+        <Moon size="1.2rem" /> Sleep
+    </Button>
+
+    <Button variant="secondary" icon>
+        <Plus size="1rem" />
+    </Button>
+    <hr />
+    <div style="display: flex;gap: 10px">
+        <Button variant="primary">Primary</Button>
+        <Button variant="secondary">Secondary</Button>
+        <Button variant="outline">Outline</Button>
+        <Button variant="ghost">Ghost</Button>
+        <Button variant="destructive">Destructive</Button>
+        <Button variant="link">Link</Button>
+        <button>Dumbutton</button>
+    </div>
+
+    <div style="display: flex;gap: 10px;align-items: center">
+        <Button size="small">Small</Button>
+        <Button size="medium">Medium</Button>
+        <Button size="large">Large</Button>
+        <Button variant="outline">
+            <Plus size="1rem" /> New project
+        </Button>
+        <Button variant="secondary" icon>
+            <Plus size="1rem" />
+        </Button>
+        <Button variant="secondary">
+            <LoaderCircle size="1rem" class="spin" />
+            Saving
+        </Button>
+        <Button disabled>Disabled</Button>
+    </div>
+
+    <hr />
+    <Button variant="ghost">
+        <Moon size="1.2rem" /> Sleep
+    </Button>
+
+    <Button variant="secondary" icon>
+        <Plus size="1rem" />
+    </Button>
+    <hr />
+    <div style="display: flex;gap: 10px">
+        <Button variant="primary">Primary</Button>
+        <Button variant="secondary">Secondary</Button>
+        <Button variant="outline">Outline</Button>
+        <Button variant="ghost">Ghost</Button>
+        <Button variant="destructive">Destructive</Button>
+        <Button variant="link">Link</Button>
+        <button>Dumbutton</button>
+    </div>
+
+    <div style="display: flex;gap: 10px;align-items: center">
+        <Button size="small">Small</Button>
+        <Button size="medium">Medium</Button>
+        <Button size="large">Large</Button>
+        <Button variant="outline">
+            <Plus size="1rem" /> New project
+        </Button>
+        <Button variant="secondary" icon>
+            <Plus size="1rem" />
+        </Button>
+        <Button variant="secondary">
+            <LoaderCircle size="1rem" class="spin" />
+            Saving
+        </Button>
+        <Button disabled>Disabled</Button>
+    </div>
+
+    <hr />
+    <Button variant="ghost">
+        <Moon size="1.2rem" /> Sleep
+    </Button>
+
+    <Button variant="secondary" icon>
+        <Plus size="1rem" />
+    </Button>
+    <hr />
+    <div style="display: flex;gap: 10px">
+        <Button variant="primary">Primary</Button>
+        <Button variant="secondary">Secondary</Button>
+        <Button variant="outline">Outline</Button>
+        <Button variant="ghost">Ghost</Button>
+        <Button variant="destructive">Destructive</Button>
+        <Button variant="link">Link</Button>
+        <button>Dumbutton</button>
+    </div>
+
+    <div style="display: flex;gap: 10px;align-items: center">
+        <Button size="small">Small</Button>
+        <Button size="medium">Medium</Button>
+        <Button size="large">Large</Button>
+        <Button variant="outline">
+            <Plus size="1rem" /> New project
+        </Button>
+        <Button variant="secondary" icon>
+            <Plus size="1rem" />
+        </Button>
+        <Button variant="secondary">
+            <LoaderCircle size="1rem" class="spin" />
+            Saving
+        </Button>
+        <Button disabled>Disabled</Button>
+    </div>
+
+    <hr />
+    <Button variant="ghost">
+        <Moon size="1.2rem" /> Sleep
+    </Button>
+
+    <Button variant="secondary" icon>
+        <Plus size="1rem" />
+    </Button>
+    <hr />
+</BaseLayout>
+
+<style is:global>
+    hr {
+        width: 100%;
+        border: none;
+        background-color: var(--ring);
+        height: 1px;
+    }
+</style>

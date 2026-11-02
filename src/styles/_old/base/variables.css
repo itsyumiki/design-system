@@ -1,0 +1,52 @@
+:root {
+    /* font stuff */
+    --f-prim: "Inter Variable", system-ui, sans-serif;
+    --f-mono:
+        "Geist Mono Variable", "Cascadia Code", "Fira Code", ui-monospace,
+        monospace;
+    --f-display: "Doto Variable", ui-monospace, monospace;
+
+    --f-title: var(--f-mono);
+    --f-body: var(--f-prim);
+
+    --f-title-wght: 400;
+    --f-body-wght: 250;
+
+    --h1-font-size: 1.5rem;
+    --h1-line-hght: 2rem;
+    --h2-font-size: 0.875rem;
+    --h2-line-hght: 1.25rem;
+    --p-font-size: 1rem;
+    --p-line-hght: 1.5rem;
+
+    /* the main content box */
+    --m-min-wdth: 180px;
+    --m-max-wdth: 768px;
+    --m-padding: 1.25rem; /* the one from sides */
+
+    --m-spacing: 1rem; /* the space between sections */
+
+    /*  stuff inside the sections */
+    --s-padding-hght: 0.75rem;
+    --s-padding-wdth: 1.25rem; /* between side border and s-body */
+
+    /* section header stuff */
+    --s-h-icon-spacing: 1rem; /* the space between icon and title */
+    --s-h-icon-size: 1rem; /* the size of the icon */
+
+    /* components */
+    /* header */
+    --h-padding-hght: 0.75rem;
+    --h-padding-wdth: 1.25rem;
+    --h-spacing: 1rem;
+    /* floating action button */
+    --fab-spacing: 1.25rem; /* 20px */
+    --scroll-line-hght: 3rem;
+}
+
+@media (min-width: 768px) {
+    :root {
+        --fab-padding: 1.25rem; /* 20px */
+        --scroll-line-hght: 4.5rem;
+    }
+}

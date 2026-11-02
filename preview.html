@@ -1,0 +1,1388 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, viewport-fit=cover"
+        />
+        <title>Component preview</title>
+        <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@300..600&family=Inter:wght@200..600&display=swap"
+        />
+        <style>
+            /* tokens: dark is default, .light overrides (same convention as your repo) */
+            :root {
+                --f-body: "Inter", system-ui, sans-serif;
+                --f-mono:
+                    "Geist Mono", "Cascadia Code", ui-monospace, monospace;
+                --radius: 0.625rem;
+                --r-sm: calc(var(--radius) - 4px);
+                --r-md: calc(var(--radius) - 2px);
+                --background: oklch(0.145 0 0);
+                --foreground: oklch(0.985 0 0);
+                --primary: oklch(0.985 0 0);
+                --primary-foreground: oklch(0.205 0 0);
+                --secondary: oklch(0.269 0 0);
+                --secondary-foreground: oklch(0.985 0 0);
+                --muted-foreground: oklch(0.708 0 0);
+                --accent: oklch(0.269 0 0);
+                --border: oklch(0.269 0 0);
+                --input: oklch(0.32 0 0);
+                --ring: oklch(0.55 0 0);
+                --destructive: oklch(0.45 0.17 25);
+                --destructive-foreground: oklch(0.68 0.21 25);
+                --success: oklch(0.75 0.17 150);
+                --warning: oklch(0.82 0.15 80);
+                --info: oklch(0.72 0.13 240);
+                color-scheme: dark;
+                background: var(--background);
+                color: var(--foreground);
+                box-sizing: border-box;
+                padding-top: env(safe-area-inset-top, 0px);
+                padding-bottom: env(safe-area-inset-bottom, 0px);
+            }
+            :root.light {
+                --background: oklch(1 0 0);
+                --foreground: oklch(0.145 0 0);
+                --primary: oklch(0.205 0 0);
+                --primary-foreground: oklch(0.985 0 0);
+                --secondary: oklch(0.97 0 0);
+                --secondary-foreground: oklch(0.205 0 0);
+                --muted-foreground: oklch(0.5 0 0);
+                --accent: oklch(0.95 0 0);
+                --border: oklch(0.922 0 0);
+                --input: oklch(0.87 0 0);
+                --ring: oklch(0.708 0 0);
+                --destructive: oklch(0.577 0.245 27);
+                --destructive-foreground: oklch(0.55 0.23 27);
+                --success: oklch(0.5 0.14 150);
+                --warning: oklch(0.55 0.13 70);
+                --info: oklch(0.5 0.15 245);
+                color-scheme: light;
+            }
+            * {
+                box-sizing: border-box;
+                margin: 0;
+            }
+            html {
+                scroll-padding-top: env(safe-area-inset-top, 0px);
+            }
+            body {
+                font: 300 1rem/1.5 var(--f-body);
+                -webkit-font-smoothing: antialiased;
+            }
+            button,
+            input,
+            select,
+            textarea {
+                font: inherit;
+                color: inherit;
+            }
+            :focus-visible {
+                outline: 2px solid var(--ring);
+                outline-offset: 2px;
+            }
+            .ic {
+                width: 1rem;
+                height: 1rem;
+                fill: none;
+                stroke: currentColor;
+                stroke-width: 2;
+                stroke-linecap: round;
+                stroke-linejoin: round;
+                flex: none;
+            }
+            .mono {
+                font-family: var(--f-mono);
+                font-size: 0.8rem;
+            }
+            .row {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.6rem;
+                align-items: center;
+            }
+
+            /* header: outer box (spacing) > inner box > left / middle / right */
+            .header {
+                position: sticky;
+                top: env(safe-area-inset-top, 0px);
+                z-index: 20;
+                padding: 0.75rem 1.25rem;
+                background: var(--background);
+                border-bottom: 1px solid var(--border);
+                transition: padding 0.2s;
+            }
+            .header-inner {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 1rem;
+                border: 1px solid transparent;
+                border-radius: var(--radius);
+            }
+            .h-mid {
+                flex: 1;
+                display: flex;
+                justify-content: center;
+                font-size: 0.85rem;
+                color: var(--muted-foreground);
+            }
+            .domain {
+                font-size: 1.25rem;
+            }
+            .long {
+                display: none;
+            }
+            @media (min-width: 640px) {
+                .short {
+                    display: none;
+                }
+                .long {
+                    display: inline;
+                }
+            }
+            body:has(#float:checked) .header {
+                background: none;
+                border-color: transparent;
+                padding: 0.75rem 1rem;
+            }
+            body:has(#float:checked) .header-inner {
+                padding: 0.4rem 0.5rem 0.4rem 1rem;
+                border-color: var(--border);
+                background: color-mix(
+                    in oklab,
+                    var(--background) 75%,
+                    transparent
+                );
+                backdrop-filter: blur(10px);
+            }
+            .i-sun {
+                display: none;
+            }
+            :root.light .i-moon {
+                display: none;
+            }
+            :root.light .i-sun {
+                display: block;
+            }
+
+            main {
+                max-width: 768px;
+                margin-inline: auto;
+                padding: 1.25rem;
+                display: grid;
+                gap: 1rem;
+            }
+            h1 {
+                font-size: 1.5rem;
+                line-height: 2rem;
+                font-weight: 400;
+            }
+            .lead {
+                color: var(--muted-foreground);
+                max-width: 60ch;
+            }
+            .box {
+                border: 1px solid var(--border);
+                border-radius: var(--radius);
+            }
+            .box > h2 {
+                font: 400 0.875rem/1.25rem var(--f-mono);
+                color: var(--muted-foreground);
+                padding: 0.75rem 1.25rem;
+                border-bottom: 1px solid var(--border);
+            }
+            .body {
+                padding: 1.25rem;
+                display: grid;
+                gap: 1.1rem;
+            }
+            .grid2 {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+                gap: 0.75rem;
+            }
+
+            /* buttons */
+            .btn {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 0.5rem;
+                height: 2.25rem;
+                padding: 0 1rem;
+                font-size: 0.875rem;
+                font-weight: 400;
+                border: 1px solid transparent;
+                border-radius: var(--r-md);
+                background: var(--primary);
+                color: var(--primary-foreground);
+                cursor: pointer;
+                transition:
+                    background 0.15s,
+                    border-color 0.15s,
+                    transform 0.06s;
+            }
+            .btn:hover {
+                background: color-mix(
+                    in oklab,
+                    var(--primary) 85%,
+                    transparent
+                );
+            }
+            .btn:active {
+                transform: translateY(1px);
+            }
+            .btn:disabled {
+                opacity: 0.5;
+                pointer-events: none;
+            }
+            .btn.secondary {
+                background: var(--secondary);
+                color: var(--secondary-foreground);
+            }
+            .btn.secondary:hover {
+                background: color-mix(
+                    in oklab,
+                    var(--secondary),
+                    var(--foreground) 8%
+                );
+            }
+            .btn.outline {
+                background: transparent;
+                color: var(--foreground);
+                border-color: var(--input);
+            }
+            .btn.ghost {
+                background: transparent;
+                color: var(--foreground);
+            }
+            .btn.outline:hover,
+            .btn.ghost:hover {
+                background: color-mix(in oklab, var(--accent) 60%, transparent);
+            }
+            .btn.destructive {
+                background: var(--destructive);
+                color: #fff;
+            }
+            .btn.destructive:hover {
+                background: color-mix(in oklab, var(--destructive) 85%, #000);
+            }
+            .btn.link {
+                background: none;
+                color: var(--foreground);
+                padding: 0;
+                height: auto;
+            }
+            .btn.link:hover {
+                text-decoration: underline;
+                text-underline-offset: 4px;
+            }
+            .btn.sm {
+                height: 1.9rem;
+                padding: 0 0.7rem;
+                font-size: 0.8rem;
+            }
+            .btn.lg {
+                height: 2.6rem;
+                padding: 0 1.4rem;
+            }
+            .btn.icon {
+                width: 2.25rem;
+                padding: 0;
+            }
+            .spin {
+                width: 0.9rem;
+                height: 0.9rem;
+                border: 2px solid currentColor;
+                border-right-color: transparent;
+                border-radius: 50%;
+                animation: sp 0.7s linear infinite;
+            }
+            @keyframes sp {
+                to {
+                    transform: rotate(360deg);
+                }
+            }
+
+            /* badges + alerts */
+            .badge {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.4rem;
+                padding: 0.1rem 0.6rem;
+                border: 1px solid var(--border);
+                border-radius: 99px;
+                font: 400 0.75rem var(--f-mono);
+            }
+            .badge.dot::before {
+                content: "";
+                width: 0.4rem;
+                height: 0.4rem;
+                border-radius: 50%;
+                background: currentColor;
+            }
+            .badge.ok {
+                --c: var(--success);
+            }
+            .badge.warn {
+                --c: var(--warning);
+            }
+            .badge.err {
+                --c: var(--destructive-foreground);
+            }
+            .badge.info {
+                --c: var(--info);
+            }
+            .badge[class*=" "]:not(.dot):not(.plain),
+            .badge.ok,
+            .badge.warn,
+            .badge.err,
+            .badge.info {
+                color: var(--c);
+                background: color-mix(in oklab, var(--c) 14%, transparent);
+                border-color: color-mix(in oklab, var(--c) 30%, transparent);
+            }
+            .alert {
+                display: flex;
+                gap: 0.7rem;
+                padding: 0.75rem 0.9rem;
+                border: 1px solid var(--border);
+                border-radius: var(--r-md);
+                font-size: 0.85rem;
+            }
+            .alert .ic {
+                margin-top: 0.15rem;
+                color: var(--c);
+            }
+            .alert b {
+                display: block;
+                font-weight: 400;
+            }
+            .alert span {
+                color: var(--muted-foreground);
+            }
+
+            /* inputs */
+            .field {
+                display: grid;
+                gap: 0.4rem;
+                align-content: start;
+            }
+            .field label {
+                font-size: 0.8rem;
+                font-weight: 400;
+            }
+            .input {
+                width: 100%;
+                height: 2.25rem;
+                padding: 0 0.75rem;
+                font-size: 0.875rem;
+                background: transparent;
+                border: 1px solid var(--input);
+                border-radius: var(--r-md);
+                transition:
+                    border-color 0.15s,
+                    box-shadow 0.15s;
+            }
+            textarea.input {
+                height: 5rem;
+                padding: 0.5rem 0.75rem;
+                resize: vertical;
+            }
+            .input::placeholder {
+                color: var(--muted-foreground);
+            }
+            .input:hover {
+                border-color: var(--ring);
+            }
+            .input:focus-visible {
+                outline: none;
+                border-color: var(--ring);
+                box-shadow: 0 0 0 3px
+                    color-mix(in oklab, var(--ring) 40%, transparent);
+            }
+            .input:disabled {
+                opacity: 0.5;
+            }
+            .input.bad {
+                border-color: var(--destructive-foreground);
+            }
+            .hint {
+                font-size: 0.75rem;
+                color: var(--muted-foreground);
+            }
+            .hint.bad {
+                color: var(--destructive-foreground);
+            }
+
+            /* switch / checkbox / radio */
+            .opt {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.6rem;
+                font-size: 0.875rem;
+                cursor: pointer;
+            }
+            .switch,
+            .check,
+            .radio {
+                appearance: none;
+                position: relative;
+                flex: none;
+                cursor: pointer;
+                margin: 0;
+                transition:
+                    background 0.15s,
+                    border-color 0.15s;
+            }
+            .switch {
+                width: 2.25rem;
+                height: 1.25rem;
+                border-radius: 99px;
+                background: var(--secondary);
+                border: 1px solid var(--input);
+            }
+            .switch::before {
+                content: "";
+                position: absolute;
+                top: 50%;
+                left: 0.125rem;
+                width: 0.875rem;
+                height: 0.875rem;
+                border-radius: 50%;
+                background: var(--muted-foreground);
+                transform: translateY(-50%);
+                transition:
+                    transform 0.15s,
+                    background 0.15s;
+            }
+            .switch:checked {
+                background: var(--primary);
+                border-color: var(--primary);
+            }
+            .switch:checked::before {
+                transform: translate(1rem, -50%);
+                background: var(--primary-foreground);
+            }
+            .check {
+                width: 1rem;
+                height: 1rem;
+                border-radius: 4px;
+                border: 1px solid var(--input);
+            }
+            .check::after {
+                content: "";
+                position: absolute;
+                left: 4px;
+                top: 1px;
+                width: 4px;
+                height: 8px;
+                border: solid var(--primary-foreground);
+                border-width: 0 2px 2px 0;
+                transform: rotate(45deg);
+                opacity: 0;
+            }
+            .check:checked {
+                background: var(--primary);
+                border-color: var(--primary);
+            }
+            .check:checked::after {
+                opacity: 1;
+            }
+            .radio {
+                width: 1rem;
+                height: 1rem;
+                border-radius: 50%;
+                border: 1px solid var(--input);
+            }
+            .radio:checked {
+                background: var(--primary);
+                border-color: var(--primary);
+                box-shadow: inset 0 0 0 3px var(--background);
+            }
+            .switch:hover,
+            .check:hover,
+            .radio:hover {
+                border-color: var(--ring);
+            }
+
+            /* slider */
+            .srow {
+                display: grid;
+                grid-template-columns: 5.5rem 1fr 3rem;
+                align-items: center;
+                gap: 0.75rem;
+                font-size: 0.875rem;
+            }
+            .srow output {
+                text-align: right;
+                font: 400 0.8rem var(--f-mono);
+            }
+            .slider {
+                appearance: none;
+                width: 100%;
+                height: 1.25rem;
+                background: none;
+                cursor: pointer;
+                --v: 50%;
+            }
+            .slider::-webkit-slider-runnable-track {
+                height: 6px;
+                border-radius: 9px;
+                background: linear-gradient(
+                    to right,
+                    var(--primary) var(--v),
+                    var(--secondary) var(--v)
+                );
+            }
+            .slider::-moz-range-track {
+                height: 6px;
+                border-radius: 9px;
+                background: linear-gradient(
+                    to right,
+                    var(--primary) var(--v),
+                    var(--secondary) var(--v)
+                );
+            }
+            .slider::-webkit-slider-thumb {
+                appearance: none;
+                width: 1rem;
+                height: 1rem;
+                margin-top: -5px;
+                border-radius: 50%;
+                background: var(--background);
+                border: 2px solid var(--primary);
+                transition: box-shadow 0.15s;
+            }
+            .slider::-moz-range-thumb {
+                width: 0.75rem;
+                height: 0.75rem;
+                border-radius: 50%;
+                background: var(--background);
+                border: 2px solid var(--primary);
+            }
+            .slider:hover::-webkit-slider-thumb,
+            .slider:focus-visible::-webkit-slider-thumb {
+                box-shadow: 0 0 0 4px
+                    color-mix(in oklab, var(--ring) 40%, transparent);
+            }
+
+            /* tooltip, popover, dialog, toast */
+            [data-tip] {
+                position: relative;
+            }
+            [data-tip]::after {
+                content: attr(data-tip);
+                position: absolute;
+                bottom: calc(100% + 6px);
+                left: 50%;
+                transform: translate(-50%, 2px);
+                padding: 0.25rem 0.5rem;
+                border-radius: var(--r-sm);
+                background: var(--foreground);
+                color: var(--background);
+                font: 400 0.75rem var(--f-body);
+                white-space: nowrap;
+                opacity: 0;
+                pointer-events: none;
+                transition:
+                    opacity 0.15s,
+                    transform 0.15s;
+                z-index: 5;
+            }
+            [data-tip]:hover::after,
+            [data-tip]:focus-visible::after {
+                opacity: 1;
+                transform: translate(-50%, 0);
+            }
+            .pop {
+                position: fixed;
+                inset: auto;
+                margin: 0;
+                width: min(16rem, calc(100vw - 16px));
+                padding: 0.25rem;
+                border: 1px solid var(--border);
+                border-radius: var(--r-md);
+                background: var(--background);
+                color: var(--foreground);
+                box-shadow: 0 10px 30px oklch(0 0 0/0.3);
+            }
+            .pop:popover-open,
+            dialog[open],
+            .toast {
+                animation: pop 0.14s ease-out;
+            }
+            @keyframes pop {
+                from {
+                    opacity: 0;
+                    transform: scale(0.97);
+                }
+            }
+            .pop button.item {
+                display: block;
+                width: 100%;
+                padding: 0.4rem 0.6rem;
+                text-align: left;
+                font-size: 0.85rem;
+                border: 0;
+                border-radius: var(--r-sm);
+                background: none;
+                cursor: pointer;
+            }
+            .pop button.item:hover,
+            .pop button.item:focus-visible {
+                background: var(--accent);
+                outline: none;
+            }
+            .pop hr {
+                border: 0;
+                border-top: 1px solid var(--border);
+                margin: 0.25rem 0;
+            }
+            .pop .txt {
+                padding: 0.6rem;
+                font-size: 0.85rem;
+                display: grid;
+                gap: 0.5rem;
+            }
+            .pop .txt p {
+                color: var(--muted-foreground);
+            }
+            dialog {
+                margin: auto;
+                width: min(24rem, calc(100vw - 2rem));
+                padding: 1.25rem;
+                border: 1px solid var(--border);
+                border-radius: var(--radius);
+                background: var(--background);
+                color: var(--foreground);
+            }
+            dialog::backdrop {
+                background: oklch(0 0 0/0.6);
+                backdrop-filter: blur(2px);
+            }
+            dialog form {
+                display: grid;
+                gap: 0.75rem;
+            }
+            dialog p {
+                color: var(--muted-foreground);
+                font-size: 0.9rem;
+            }
+            dialog .row {
+                justify-content: flex-end;
+                margin-top: 0.5rem;
+            }
+            .toasts {
+                position: fixed;
+                right: 1rem;
+                bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+                display: grid;
+                gap: 0.5rem;
+                z-index: 50;
+            }
+            .toast {
+                padding: 0.6rem 0.9rem;
+                border: 1px solid var(--border);
+                border-radius: var(--r-md);
+                background: var(--background);
+                font-size: 0.85rem;
+                box-shadow: 0 10px 30px oklch(0 0 0/0.3);
+            }
+
+            /* tabs (radio + :has) and accordion */
+            .tabs {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.25rem;
+                padding: 0.25rem;
+                border-radius: var(--r-md);
+                background: var(--secondary);
+                width: fit-content;
+            }
+            .tabs input {
+                position: absolute;
+                opacity: 0;
+                pointer-events: none;
+            }
+            .tabs label {
+                padding: 0.25rem 0.8rem;
+                border-radius: var(--r-sm);
+                font-size: 0.85rem;
+                color: var(--muted-foreground);
+                cursor: pointer;
+                transition:
+                    background 0.15s,
+                    color 0.15s;
+            }
+            .tabs label:hover {
+                color: var(--foreground);
+            }
+            .tabs input:checked + label {
+                background: var(--background);
+                color: var(--foreground);
+            }
+            .tabs input:focus-visible + label {
+                outline: 2px solid var(--ring);
+            }
+            .panel {
+                display: none;
+                font-size: 0.9rem;
+                color: var(--muted-foreground);
+            }
+            .body:has(#t1:checked) #p1,
+            .body:has(#t2:checked) #p2,
+            .body:has(#t3:checked) #p3 {
+                display: block;
+            }
+            details {
+                border-bottom: 1px solid var(--border);
+            }
+            summary {
+                display: flex;
+                align-items: center;
+                padding: 0.7rem 0;
+                font-size: 0.9rem;
+                font-weight: 400;
+                cursor: pointer;
+                list-style: none;
+            }
+            summary::-webkit-details-marker {
+                display: none;
+            }
+            summary::after {
+                content: "";
+                margin-left: auto;
+                width: 0.45rem;
+                height: 0.45rem;
+                border: solid var(--muted-foreground);
+                border-width: 0 1.5px 1.5px 0;
+                transform: rotate(45deg);
+                transition: transform 0.15s;
+            }
+            details[open] summary::after {
+                transform: rotate(-135deg);
+            }
+            details p {
+                padding-bottom: 0.8rem;
+                font-size: 0.85rem;
+                color: var(--muted-foreground);
+            }
+
+            /* cards, bars, table */
+            .card {
+                border: 1px solid var(--border);
+                border-radius: var(--r-md);
+                padding: 0.9rem;
+                display: grid;
+                gap: 0.6rem;
+                align-content: start;
+                transition: border-color 0.15s;
+            }
+            .card:hover {
+                border-color: var(--ring);
+            }
+            .card h3 {
+                font: 400 0.9rem var(--f-mono);
+            }
+            .mrow,
+            .kv {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                font-size: 0.85rem;
+            }
+            .kv {
+                padding: 0.3rem 0;
+                border-bottom: 1px solid var(--border);
+            }
+            .kv:last-child {
+                border: 0;
+            }
+            .bar {
+                height: 6px;
+                border-radius: 9px;
+                background: var(--secondary);
+                overflow: hidden;
+            }
+            .bar i {
+                display: block;
+                height: 100%;
+                width: var(--v);
+                background: var(--primary);
+                border-radius: inherit;
+            }
+            .bar.warn i {
+                background: var(--warning);
+            }
+            .scroll {
+                overflow-x: auto;
+            }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                font-size: 0.85rem;
+            }
+            th {
+                font: 400 0.75rem var(--f-mono);
+                color: var(--muted-foreground);
+                text-align: left;
+            }
+            th,
+            td {
+                padding: 0.55rem 0.75rem;
+                border-bottom: 1px solid var(--border);
+            }
+            tbody tr:last-child td {
+                border: 0;
+            }
+            tbody tr {
+                transition: background 0.15s;
+            }
+            tbody tr:hover {
+                background: color-mix(in oklab, var(--accent) 50%, transparent);
+            }
+            @media (prefers-reduced-motion: reduce) {
+                *,
+                ::before,
+                ::after {
+                    transition: none !important;
+                    animation: none !important;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <svg width="0" height="0" style="position: absolute" aria-hidden="true">
+            <defs>
+                <symbol id="sun" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="4" />
+                    <path
+                        d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"
+                    />
+                </symbol>
+                <symbol id="moon" viewBox="0 0 24 24">
+                    <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+                </symbol>
+                <symbol id="plus" viewBox="0 0 24 24">
+                    <path d="M5 12h14M12 5v14" />
+                </symbol>
+                <symbol id="info" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M12 16v-4M12 8h.01" />
+                </symbol>
+                <symbol id="warn" viewBox="0 0 24 24">
+                    <path d="M12 9v4M12 17h.01" />
+                    <path
+                        d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"
+                    />
+                </symbol>
+                <symbol id="chev" viewBox="0 0 24 24">
+                    <path d="m6 9 6 6 6-6" />
+                </symbol>
+            </defs>
+        </svg>
+
+        <header class="header">
+            <div class="header-inner">
+                <div class="h-left">
+                    <span class="domain"
+                        ><span class="short">yd</span
+                        ><span class="long">yourdomain.com</span></span
+                    >
+                </div>
+                <div class="h-mid">
+                    <label class="opt"
+                        ><input type="checkbox" class="switch" id="float" />
+                        Floating header</label
+                    >
+                </div>
+                <div class="h-right">
+                    <button
+                        class="btn ghost icon"
+                        id="theme"
+                        aria-label="Toggle theme"
+                    >
+                        <svg class="ic i-moon"><use href="#moon" /></svg
+                        ><svg class="ic i-sun"><use href="#sun" /></svg>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <div>
+                <h1>Component preview</h1>
+                <p class="lead">
+                    Hover things, tab through with the keyboard, click around.
+                    It's plain HTML and CSS on your tokens; only the slider
+                    fill, popup positioning, dialog and toasts use a few lines
+                    of JS.
+                </p>
+            </div>
+
+            <section class="box">
+                <h2>Buttons</h2>
+                <div class="body">
+                    <div class="row">
+                        <button class="btn">Primary</button
+                        ><button class="btn secondary">Secondary</button
+                        ><button class="btn outline">Outline</button>
+                        <button class="btn ghost">Ghost</button
+                        ><button class="btn destructive">Destructive</button
+                        ><button class="btn link">Link</button>
+                    </div>
+                    <div class="row">
+                        <button class="btn sm">Small</button
+                        ><button class="btn">Default</button
+                        ><button class="btn lg">Large</button>
+                        <button class="btn outline">
+                            <svg class="ic"><use href="#plus" /></svg>New
+                            project
+                        </button>
+                        <button
+                            class="btn secondary icon"
+                            data-tip="Add item"
+                            aria-label="Add item"
+                        >
+                            <svg class="ic"><use href="#plus" /></svg>
+                        </button>
+                        <button class="btn secondary" aria-busy="true">
+                            <span class="spin"></span>Saving
+                        </button>
+                        <button class="btn" disabled>Disabled</button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="box">
+                <h2>Badges and alerts</h2>
+                <div class="body">
+                    <div class="row">
+                        <span class="badge">default</span
+                        ><span class="badge ok dot">running</span
+                        ><span class="badge warn dot">building</span
+                        ><span class="badge err dot">failed</span
+                        ><span class="badge info">v2.4.1</span>
+                    </div>
+                    <div class="alert" style="--c: var(--info)">
+                        <svg class="ic"><use href="#info" /></svg>
+                        <div>
+                            <b>Build queued</b
+                            ><span>Your app deploys once 2 checks pass.</span>
+                        </div>
+                    </div>
+                    <div class="alert" style="--c: var(--warning)">
+                        <svg class="ic"><use href="#warn" /></svg>
+                        <div>
+                            <b>Disk almost full</b
+                            ><span
+                                >12% left on /var. Prune old images from
+                                settings.</span
+                            >
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="box">
+                <h2>Inputs</h2>
+                <div class="body">
+                    <div class="grid2">
+                        <div class="field">
+                            <label for="i1">Project name</label
+                            ><input
+                                id="i1"
+                                class="input"
+                                placeholder="my-app"
+                            /><span class="hint"
+                                >Lowercase letters and dashes.</span
+                            >
+                        </div>
+                        <div class="field">
+                            <label for="i2">Email</label
+                            ><input
+                                id="i2"
+                                class="input bad"
+                                value="hello@"
+                                aria-invalid="true"
+                            /><span class="hint bad"
+                                >Enter a full address, like you@site.com.</span
+                            >
+                        </div>
+                        <div class="field">
+                            <label for="i3">Region</label
+                            ><select id="i3" class="input">
+                                <option>Frankfurt (fra1)</option>
+                                <option>Amsterdam (ams3)</option>
+                                <option>New York (nyc1)</option>
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label for="i4">Locked field</label
+                            ><input
+                                id="i4"
+                                class="input"
+                                value="read-only value"
+                                disabled
+                            />
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label for="i5">Message</label
+                        ><textarea
+                            id="i5"
+                            class="input"
+                            placeholder="Write something..."
+                        ></textarea>
+                    </div>
+                </div>
+            </section>
+
+            <section class="box">
+                <h2>Toggles and choices</h2>
+                <div class="body">
+                    <div class="row" style="gap: 1.5rem">
+                        <label class="opt"
+                            ><input type="checkbox" class="switch" checked />
+                            Notifications</label
+                        >
+                        <label class="opt"
+                            ><input type="checkbox" class="switch" />
+                            Auto-deploy</label
+                        >
+                        <label class="opt"
+                            ><input type="checkbox" class="check" checked />
+                            Remember me</label
+                        >
+                        <label class="opt"
+                            ><input type="checkbox" class="check" />
+                            Subscribe</label
+                        >
+                    </div>
+                    <div class="row" style="gap: 1.5rem">
+                        <label class="opt"
+                            ><input
+                                type="radio"
+                                name="r"
+                                class="radio"
+                                checked
+                            />
+                            Compact</label
+                        >
+                        <label class="opt"
+                            ><input type="radio" name="r" class="radio" />
+                            Comfortable</label
+                        >
+                        <label class="opt"
+                            ><input type="radio" name="r" class="radio" />
+                            Spacious</label
+                        >
+                    </div>
+                </div>
+            </section>
+
+            <section class="box">
+                <h2>Sliders</h2>
+                <div class="body">
+                    <div class="srow">
+                        <span>Volume</span
+                        ><input
+                            class="slider"
+                            type="range"
+                            min="0"
+                            max="100"
+                            value="60"
+                            aria-label="Volume"
+                        /><output data-u="%"></output>
+                    </div>
+                    <div class="srow">
+                        <span>Replicas</span
+                        ><input
+                            class="slider"
+                            type="range"
+                            min="1"
+                            max="8"
+                            step="1"
+                            value="3"
+                            aria-label="Replicas"
+                        /><output></output>
+                    </div>
+                </div>
+            </section>
+
+            <section class="box">
+                <h2>Popups</h2>
+                <div class="body">
+                    <div class="row">
+                        <button class="btn outline" data-tip="I'm a tooltip">
+                            Hover for tooltip
+                        </button>
+                        <button class="btn outline" popovertarget="m1">
+                            Options<svg class="ic"><use href="#chev" /></svg>
+                        </button>
+                        <button
+                            class="btn ghost icon"
+                            popovertarget="m2"
+                            aria-label="More info"
+                        >
+                            <svg class="ic"><use href="#info" /></svg>
+                        </button>
+                        <button
+                            class="btn outline"
+                            onclick="$('#dlg').showModal()"
+                        >
+                            Open dialog
+                        </button>
+                        <button
+                            class="btn secondary"
+                            onclick="toast('Changes saved')"
+                        >
+                            Show toast
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="box">
+                <h2>Tabs and accordion</h2>
+                <div class="body">
+                    <div class="tabs">
+                        <input type="radio" name="t" id="t1" checked /><label
+                            for="t1"
+                            >Overview</label
+                        >
+                        <input type="radio" name="t" id="t2" /><label for="t2"
+                            >Logs</label
+                        >
+                        <input type="radio" name="t" id="t3" /><label for="t3"
+                            >Settings</label
+                        >
+                    </div>
+                    <p class="panel" id="p1">
+                        Three services running, one build in progress. Nothing
+                        needs your attention.
+                    </p>
+                    <p class="panel mono" id="p2">
+                        12:04:11 pulled image api:9c1e4fa<br />12:04:19 health
+                        check passed
+                    </p>
+                    <p class="panel" id="p3">
+                        Environment variables, domains and deploy hooks live
+                        here.
+                    </p>
+                    <div>
+                        <details open>
+                            <summary>
+                                How do themes sync across subdomains?
+                            </summary>
+                            <p>
+                                A cookie scoped to your root domain stores light
+                                or dark, and each app reads it on load.
+                            </p>
+                        </details>
+                        <details>
+                            <summary>Why are the tokens semantic?</summary>
+                            <p>
+                                Components use names like --border and
+                                --muted-foreground, so a theme only remaps
+                                values.
+                            </p>
+                        </details>
+                    </div>
+                </div>
+            </section>
+
+            <section class="box">
+                <h2>Cards and data</h2>
+                <div class="body">
+                    <div class="grid2">
+                        <div class="card">
+                            <h3>Server load</h3>
+                            <div class="mrow">
+                                <span>CPU</span><span class="mono">42%</span>
+                            </div>
+                            <div class="bar" style="--v: 42%"><i></i></div>
+                            <div class="mrow">
+                                <span>Memory</span><span class="mono">71%</span>
+                            </div>
+                            <div class="bar" style="--v: 71%"><i></i></div>
+                            <div class="mrow">
+                                <span>Disk</span><span class="mono">88%</span>
+                            </div>
+                            <div class="bar warn" style="--v: 88%"><i></i></div>
+                        </div>
+                        <div class="card">
+                            <h3>api-7f3a</h3>
+                            <div>
+                                <div class="kv">
+                                    <span>Status</span
+                                    ><span class="badge ok dot">running</span>
+                                </div>
+                                <div class="kv">
+                                    <span>Region</span
+                                    ><span class="mono">fra1</span>
+                                </div>
+                                <div class="kv">
+                                    <span>Commit</span
+                                    ><span class="mono">9c1e4fa</span>
+                                </div>
+                                <div class="kv">
+                                    <span>Uptime</span
+                                    ><span class="mono">12d 4h</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="scroll">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Service</th>
+                                    <th>Status</th>
+                                    <th>Updated</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="mono">api</td>
+                                    <td>
+                                        <span class="badge ok dot"
+                                            >running</span
+                                        >
+                                    </td>
+                                    <td>2m ago</td>
+                                </tr>
+                                <tr>
+                                    <td class="mono">chat</td>
+                                    <td>
+                                        <span class="badge warn dot"
+                                            >building</span
+                                        >
+                                    </td>
+                                    <td>just now</td>
+                                </tr>
+                                <tr>
+                                    <td class="mono">git</td>
+                                    <td>
+                                        <span class="badge err dot"
+                                            >failed</span
+                                        >
+                                    </td>
+                                    <td>1h ago</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <div class="pop" id="m1" popover>
+            <button
+                class="item"
+                popovertarget="m1"
+                popovertargetaction="hide"
+                onclick="toast('Renamed')"
+            >
+                Rename
+            </button>
+            <button
+                class="item"
+                popovertarget="m1"
+                popovertargetaction="hide"
+                onclick="toast('Duplicated')"
+            >
+                Duplicate
+            </button>
+            <hr />
+            <button
+                class="item"
+                style="color: var(--destructive-foreground)"
+                popovertarget="m1"
+                popovertargetaction="hide"
+                onclick="$('#dlg').showModal()"
+            >
+                Delete
+            </button>
+        </div>
+        <div class="pop" id="m2" popover>
+            <div class="txt">
+                <b style="font-weight: 400">Deploy token</b>
+                <p>
+                    Lets a server pull your image without your password. Rotate
+                    it every 90 days.
+                </p>
+                <button
+                    class="btn outline sm"
+                    popovertarget="m2"
+                    popovertargetaction="hide"
+                >
+                    Got it
+                </button>
+            </div>
+        </div>
+        <dialog id="dlg">
+            <form method="dialog">
+                <b style="font-weight: 400; font-size: 1.05rem"
+                    >Delete this deployment?</b
+                >
+                <p>This removes api-7f3a and its logs. You can't undo this.</p>
+                <div class="row">
+                    <button class="btn outline" value="cancel">Cancel</button
+                    ><button class="btn destructive" value="ok">
+                        Delete deployment
+                    </button>
+                </div>
+            </form>
+        </dialog>
+        <div class="toasts"></div>
+
+        <script>
+            const $ = (s) => document.querySelector(s);
+            $("#theme").onclick = () =>
+                document.documentElement.classList.toggle("light");
+            document.querySelectorAll(".slider").forEach((s) => {
+                const o = s.nextElementSibling,
+                    f = () => {
+                        s.style.setProperty(
+                            "--v",
+                            ((s.value - s.min) / (s.max - s.min)) * 100 + "%",
+                        );
+                        o.textContent = s.value + (s.dataset.u || "");
+                    };
+                s.oninput = f;
+                f();
+            });
+            document.querySelectorAll("[popover]").forEach((p) =>
+                p.addEventListener("beforetoggle", (e) => {
+                    if (e.newState !== "open") return;
+                    const b = $(
+                        `[popovertarget="${p.id}"]`,
+                    ).getBoundingClientRect();
+                    p.style.top = b.bottom + 6 + "px";
+                    p.style.left =
+                        Math.max(8, Math.min(b.left, innerWidth - 264)) + "px";
+                }),
+            );
+            function toast(m) {
+                const t = document.createElement("div");
+                t.className = "toast";
+                t.textContent = m;
+                $(".toasts").append(t);
+                setTimeout(() => t.remove(), 2800);
+            }
+            $("#dlg").addEventListener("close", (e) =>
+                toast(
+                    e.target.returnValue === "ok"
+                        ? "Deployment deleted"
+                        : "Cancelled",
+                ),
+            );
+        </script>
+    </body>
+</html>

@@ -1,0 +1,42 @@
+:root {
+    /* Setting fonts and their fallbacks */
+    --font-primary: "Inter Variable", system-ui, sans-serif;
+    --font-monospace:
+        "Geist Mono Variable", "Cascadia Code", "Fira Code", ui-monospace,
+        monospace;
+    --font-display: "Doto Variable", ui-monospace, monospace;
+
+    /* Setting fonts for ease of use */
+    --font-title: var(--font-monospace);
+    --font-content: var(--font-primary);
+
+    --title-weight: 400;
+    --content-weight: 300;
+
+    --radius: 0.625rem;
+    --radius-small: calc(var(--radius) - 4px);
+    --radius-medium: calc(var(--radius) - 2px);
+}
+
+/* set defaults and clean up stuff */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    outline: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: var(--font-title);
+    font-weight: var(--title-weight);
+}
+
+b,
+strong {
+    font-weight: 700;
+}
